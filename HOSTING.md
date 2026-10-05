@@ -1,27 +1,42 @@
 # Hosting the manual
 
-The manual is public and published with **GitHub Pages** at
-**https://penn-cnt.github.io/cnt-procedures/**. Nobody installs anything: readers open the address,
-editors click the pencil icon on any page (it opens GitHub's web editor), commit, and the site
-updates about two minutes later.
+The manual is public at **https://cnt-manual.neurobridge.link**, served from AWS (S3 + CloudFront,
+set up from `infra/terraform/`). The repository and the site are linked both ways:
+
+- **Edit on the site → commit on GitHub.** Every page has a pencil icon. It opens that page's file in
+  GitHub's web editor; *Commit changes* saves it to the repository (or proposes it as a pull request
+  for people without write access).
+- **Commit on GitHub → site updates.** Every push to `main` runs *Publish site
+  (cnt-manual.neurobridge.link)* (`.github/workflows/deploy-aws.yml`): content check, build, upload
+  to S3, CloudFront refresh. The site changes about two minutes after the commit. If the content
+  check finds a password or identifier, nothing is published and the previous version stays up.
 
 ```
-edit on GitHub (pencil) → commit to main → GitHub Actions builds (pages.yml) → GitHub Pages serves it
+pencil on a page → GitHub editor → commit to main → Actions builds → S3 + CloudFront → cnt-manual.neurobridge.link
 ```
 
-## GitHub Pages: one-time setup (two minutes)
+## Connecting GitHub to AWS (once)
 
-1. GitHub → **penn-cnt/cnt-procedures** → **Settings** → **Pages**.
-2. Under *Build and deployment*, set **Source** to **GitHub Actions**. Nothing else to fill in.
-3. GitHub → **Actions** → *Publish to GitHub Pages* → **Run workflow** (or push any commit).
-4. When the run is green, the address above is live.
+The workflow signs in to AWS with GitHub's OIDC token and the IAM role Terraform created; no keys are
+stored anywhere. It needs three repository **variables** (Settings → Secrets and variables → Actions →
+*Variables* tab → New repository variable), whose values come from `terraform output` in CloudShell
+(`cd ~/cnt-procedures/infra/terraform && TF_DATA_DIR=/tmp/tfdata terraform output`):
 
-Because the repository and site are public, the content check in the workflow must pass before
-anything is published: it fails the build on passwords, keys, patient identifiers and fund codes.
-Personal phone numbers are not published; keep them in the CNT's own contact sheet.
+| Variable | Value |
+|---|---|
+| `AWS_ROLE_ARN` | `AWS_ROLE_ARN` output |
+| `S3_BUCKET` | `S3_BUCKET` output |
+| `CLOUDFRONT_DISTRIBUTION_ID` | `CLOUDFRONT_DISTRIBUTION_ID` output |
 
-Optional custom domain: Settings → Pages → *Custom domain* (e.g. `cnt.neurobridge.link`), plus a
-CNAME record at the DNS provider pointing to `penn-cnt.github.io`; then update `site_url` in `mkdocs.yml`.
+Until they are set, the publish job is skipped. To publish by hand from CloudShell instead:
+`git pull && uv run --frozen mkdocs build && aws s3 sync site/ s3://<S3_BUCKET> --delete` then
+`aws cloudfront create-invalidation --distribution-id <ID> --paths "/*"`.
+
+## Domain
+
+`cnt-manual.neurobridge.link` is a CNAME at Hostinger (neurobridge.link DNS) pointing to the CloudFront
+distribution, with an ACM certificate validated by a second CNAME. Do not delete either record. The
+domain is the NeuroBridge Lab's and renews automatically.
 
 ---
 

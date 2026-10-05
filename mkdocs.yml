@@ -1,6 +1,6 @@
 site_name: CNT Procedures Manual
 site_description: "Standard operating procedures of the Center for Neuroengineering & Therapeutics research teams: data, compute, imaging, electrophysiology, REDCap and operations."
-site_url: https://penn-cnt.github.io/cnt-procedures/
+site_url: https://cnt-manual.neurobridge.link/
 repo_url: https://github.com/penn-cnt/cnt-procedures
 repo_name: penn-cnt/cnt-procedures
 edit_uri: edit/main/docs/

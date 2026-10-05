@@ -1,11 +1,9 @@
 name: Publish to GitHub Pages
 
-# Builds the manual and publishes it to https://penn-cnt.github.io/cnt-procedures/
-# on every push to main. One-time setup: Settings → Pages → Build and deployment → Source: GitHub Actions.
+# Backup only: the live site is https://cnt-manual.neurobridge.link (AWS, deploy-aws.yml).
+# Run this by hand (Actions → Publish to GitHub Pages → Run workflow) if a GitHub Pages copy is wanted.
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:

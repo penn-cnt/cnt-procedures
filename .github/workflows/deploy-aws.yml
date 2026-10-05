@@ -1,4 +1,4 @@
-name: Deploy site to AWS
+name: Publish site (cnt-manual.neurobridge.link)
 
 # Builds the manual and publishes it to S3 behind CloudFront on every push to main.
 # Signs in to AWS with GitHub OIDC (no stored keys). Set these repository *variables*

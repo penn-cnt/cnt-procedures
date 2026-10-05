@@ -6,7 +6,7 @@ Standard operating procedures of the Center for Neuroengineering & Therapeutics 
 - `hooks/wiki.py` — builds the navigation from the folders and writes `map/graph.json` and `_reports/stale.json` at build time. No hand-maintained nav.
 - `docs/about/` — how to contribute, style guide, SOP template, roles.
 - `AUDIT.md` — the October 2026 page-by-page audit: what is stale, what should merge or retire, and the questions to answer.
-- `HOSTING.md` — how the website is published (GitHub Pages, https://penn-cnt.github.io/cnt-procedures/) and edited in the browser.
+- `HOSTING.md` — how the website (https://cnt-manual.neurobridge.link) is published from this repository and edited in the browser.
 - `MIGRATION-TODO.md` — what still needs a human pass after the import from the previous knowledge base.
 
 ## Preview locally
