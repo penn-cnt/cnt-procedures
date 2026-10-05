@@ -1,0 +1,22 @@
+name: Build wiki
+on:
+  push: { branches: [main] }
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }          # full history for last-updated dates
+      - uses: astral-sh/setup-uv@v5
+        with: { enable-cache: true }
+      - run: uv sync --frozen
+      - run: uv run python scripts/check_content.py
+      - run: uv run mkdocs build --strict
+      - uses: gitleaks/gitleaks-action@v2
+        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
+      - uses: actions/upload-artifact@v4
+        with: { name: site, path: site/ }
+  # Deploy is intentionally left out of the pilot. When hosting is decided:
+  #   GitHub Pages  -> add a job using actions/deploy-pages after `mkdocs build`
+  #   PennKey host  -> rsync site/ to the web server

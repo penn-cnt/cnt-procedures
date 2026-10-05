@@ -1,0 +1,12 @@
+# Optional: `pip install pre-commit && pre-commit install` to run these before every commit.
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.21.2
+    hooks: [{ id: gitleaks }]
+  - repo: local
+    hooks:
+      - id: content-check
+        name: PHI / credential / legacy-id check
+        entry: uv run python scripts/check_content.py
+        language: system
+        pass_filenames: false

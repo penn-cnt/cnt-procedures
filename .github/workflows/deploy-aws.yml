@@ -1,0 +1,48 @@
+name: Deploy site to AWS
+
+# Builds the manual and publishes it to S3 behind CloudFront on every push to main.
+# Signs in to AWS with GitHub OIDC (no stored keys). Set these repository *variables*
+# (Settings → Secrets and variables → Actions → Variables) from `terraform output`:
+#   AWS_ROLE_ARN, S3_BUCKET, CLOUDFRONT_DISTRIBUTION_ID
+# Until AWS_ROLE_ARN is set, the job is skipped.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write   # needed for OIDC
+  contents: read
+
+concurrency:
+  group: deploy-aws
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: ${{ vars.AWS_ROLE_ARN != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # full history for the "last updated" dates
+
+      - uses: astral-sh/setup-uv@v5
+
+      - name: Content check (PHI / credentials)
+        run: uv run --frozen python scripts/check_content.py
+
+      - name: Build
+        run: uv run --frozen mkdocs build
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Upload to S3
+        run: aws s3 sync site/ "s3://${{ vars.S3_BUCKET }}" --delete
+
+      - name: Refresh CloudFront
+        run: aws cloudfront create-invalidation --distribution-id "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" --paths "/*"

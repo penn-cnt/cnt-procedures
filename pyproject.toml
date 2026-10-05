@@ -1,0 +1,14 @@
+[project]
+name = "cnt-procedures"
+version = "0.1.0"
+description = "CNT standard operating procedures, built with MkDocs + Material."
+requires-python = ">=3.10"
+dependencies = [
+    "mkdocs>=1.6,<2",
+    "mkdocs-material>=9.7,<10",
+    "mkdocs-git-revision-date-localized-plugin>=1.3",
+    "pymdown-extensions>=10.12",
+]
+
+[tool.uv]
+package = false

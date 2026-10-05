@@ -1,0 +1,112 @@
+site_name: CNT Procedures Manual
+site_description: "Standard operating procedures of the Center for Neuroengineering & Therapeutics research teams: data, compute, imaging, electrophysiology, REDCap and operations."
+site_url: https://penn-cnt.github.io/cnt-procedures/
+repo_url: https://github.com/penn-cnt/cnt-procedures
+repo_name: penn-cnt/cnt-procedures
+edit_uri: edit/main/docs/
+copyright: Center for Neuroengineering & Therapeutics · internal use
+
+# Navigation is generated automatically from the docs/ folders by hooks/wiki.py:
+# theme tabs in the order below, sections from folder index.md titles, pages by
+# front-matter `order` then title. Add a page by adding a file; nothing to edit here.
+hooks:
+  - hooks/wiki.py
+
+theme:
+  name: material
+  language: en
+  logo: assets/logo-mark.png
+  favicon: assets/favicon.png
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - navigation.instant
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - search.share
+    - toc.follow
+    - content.action.edit
+    - content.code.copy
+    - content.tabs.link
+  palette:
+    scheme: default
+    primary: custom
+    accent: custom
+  font:
+    text: Inter
+    code: JetBrains Mono
+
+extra_javascript:
+  - javascripts/map.js
+
+extra_css:
+  - stylesheets/extra.css
+
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+  - tags
+  - git-revision-date-localized:
+      enable_creation_date: false
+      type: date
+      fallback_to_build_date: true
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - nl2br
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - pymdownx.caret
+  - pymdownx.mark
+
+extra:
+  generator: false
+  wiki:
+    themes:            # tab order; must match the folder names under docs/
+      - { dir: data,             title: "Data" }
+      - { dir: compute,          title: "Compute" }
+      - { dir: imaging,          title: "Imaging" }
+      - { dir: electrophysiology, title: "Electrophysiology" }
+      - { dir: redcap,           title: "REDCap & Clinical Metadata" }
+      - { dir: operations,       title: "Operations" }
+    stages:
+      - "Data Collection"
+      - "Data Governance"
+      - "Data Standardization & Integration"
+      - "Data Analytics"
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
